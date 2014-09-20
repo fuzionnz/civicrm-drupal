@@ -1,0 +1,46 @@
+<?php
+/**
+* Implements hook_ctools_plugin_api().
+
+function civicrm_metatag_ctools_plugin_api($owner, $api) {
+  if ($owner == 'metatag' && $api == 'metatag') {
+    return array('version' => 1);
+  }
+}
+ */
+/**
+ * Alter metatags before being cached.
+ *
+ * This hook is invoked prior to the meta tags for a given page are cached.
+ *
+ * @param array $output
+ *   All of the meta tags to be output for this page in their raw format. This
+ *   is a heavily nested array.
+ * @param string $instance
+ *   An identifier for the current page's page type, typically a combination
+ *   of the entity name and bundle name, e.g. "node:story".
+ */
+function civicrm_metatag_metatag_metatags_view_alter (&$output, $instance) {
+
+}
+
+/**
+ * Internal hook for adding further configuration values in bundled submodules.
+ *
+ * The defaults provided by the main Metatag module need to be extended by the
+ * bundled submodules before they are presented to other modules for altering
+ * via hook_metatag_config_default_alter(), in case differences in module
+ * weights and loading priorities cause the submodules' settings to run after
+ * those of any custom modules.
+ *
+ * @see hook_metatag_config_default()
+ * @see hook_metatag_config_default_alter()
+ */
+function civicrm_metatag_metatag_bundled_config_alter(&$config) {
+}
+
+function civicrm_metatag_metatag_page_cache_cid_parts_alter(&$cid_parts) {
+  if (substr($cid_parts['path'], 0, 7) =='civicrm') {
+    $cid_parts['path'] .=  '/' . md5(implode('_',$_GET));
+  }
+}
