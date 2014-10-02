@@ -1,8 +1,0 @@
-name = CiviMetaTag
-description = prevents metatag module from munging CiviCRM metatags
-version = 4.4
-dependencies[] = civicrm
-dependencies[] = metatag
-package = CiviCRM
-core = 7.x
-php = 5.2
