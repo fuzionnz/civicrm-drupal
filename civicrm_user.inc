@@ -131,6 +131,7 @@ function civicrm_user_categories() {
   if (!civicrm_initialize()) {
     return;
   }
+  $urlParts = explode('/', $_REQUEST['q']);
 
   $allUFGroups = CRM_Core_BAO_UFGroup::getModuleUFGroup('User Account', 0, TRUE, CRM_Core_Permission::VIEW, array('id', 'name', 'title', 'is_active'));
   $ufGroups = array();
@@ -138,9 +139,14 @@ function civicrm_user_categories() {
   $weight = 100;
   foreach ($allUFGroups as $key => $value) {
     if ($value['is_active']) {
-      $ufGroups[] = array(
+      $name = $value['name'];
+      if ($urlParts[3] != $name && $urlParts[3] == $value['title']) {
+        $name = $value['title'];
+      }
+
+      $ufGroups[] = array('name' => $name,
         'id' => $key,
-        'name' => $value['name'],
+        'name' => $name,
         'title' => $value['title'],
         'weight' => $weight,
         'access callback' => '_civicrm_categories_access',
@@ -210,7 +216,7 @@ function civicrm_user_view($user, $view_mode) {
       // CRM-3537: profile edit link
       $editURL = '';
       if (user_edit_access($user)) {
-        $editURL = '<span class="user-page-link" id="user-page-profile-' . substr($ufGroup['title'], 0, 3) . '" ><span class="user-page-bullet">&raquo;</span> ' 
+        $editURL = '<span class="user-page-link" id="user-page-profile-' . substr($ufGroup['title'], 0, 3) . '" ><span class="user-page-bullet">&raquo;</span> '
           . l(ts("Edit %1", array(1 => $ufGroup['title'])), "user/{$user->uid}/edit/" . $ufGroup['name']) . '</span>';
       }
 
